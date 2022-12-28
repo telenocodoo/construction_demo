@@ -1,0 +1,311 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <template id="tax_summary_report">
+        <t t-call="web.html_container">
+            <t t-call="web.internal_layout">
+                <div class="page">
+                    <div class="text-center">
+                        <strong>
+                            <h2>تقـرير ضريـبة القيمة المضـافة</h2>
+                        </strong>
+                        <br/>
+                        <br/>
+                        <strong>
+                            <h2>تقـرير ضريـبة القيمة المضـافة</h2>
+                        </strong>
+                        <strong>
+                            <t t-esc="date_start" t-options="{'widget': 'date'}"/>
+                            :
+                            <t t-esc="date_stop" t-options="{'widget': 'date'}"/>
+                        </strong>
+
+                    </div>
+                    <br/>
+                    <table style="border-collapse: collapse;border: 1px solid #666; margin: 5px;"
+                           border="1" class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th style="border-collapse: collapse;border: 1px solid #666;">Branch</th>
+                                <t t-foreach='branches' t-as='branch'>
+                                    <th style="border-collapse: collapse;border: 1px solid #666;" colspan="2"
+                                        class="text-center">
+                                        <t t-esc="branch['name']"/>
+                                    </th>
+                                </t>
+                                <th style="border-collapse: collapse;border: 1px solid #666;" colspan="2"
+                                    class="text-center">
+                                    Total
+                                </th>
+                            </tr>
+                            <tr style="border-collapse: collapse;border: 1px solid #666;background-color:#efedec;">
+                                <th class="text-center" style="border-collapse: collapse;border: 1px solid #666;">
+                                    Sales VAT
+                                </th>
+                                <t t-foreach='branches' t-as='branch'>
+                                    <th style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                        class="text-center">
+                                        Amount
+                                    </th>
+                                    <th style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                        class="text-center">
+                                        Tax Amount
+                                    </th>
+                                </t>
+                                <th style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                    class="text-center">
+                                    Net Sales
+                                </th>
+                                <th style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                    class="text-center">
+                                    Tax Amount
+                                </th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <t t-set="total_sales" t-value="0"/>
+                            <t t-set="total_tax" t-value="0"/>
+                            <tr t-foreach='sales_tax' t-as='tax'>
+                                <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                    class="text-center">
+                                    <t t-esc="tax['tax_name']"/>
+                                </td>
+                                <t t-foreach='tax["branch"]' t-as='tax_branch'>
+                                    <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                        class="text-center">
+                                        <t t-esc="'{0:,.2f}'.format(tax_branch['total_base_amount'])"/>
+                                    </td>
+                                    <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                        class="text-center">
+                                        <t t-esc="'{0:,.2f}'.format(tax_branch['total_tax_amount'])"/>
+                                    </td>
+                                </t>
+                                <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                    class="text-center">
+                                    <t t-set="total_sales" t-value="total_sales + tax['total_net_sales']"/>
+                                    <t t-esc="'{0:,.2f}'.format(tax['total_net_sales'])"/>
+                                </td>
+                                <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                    class="text-center">
+                                    <t t-set="total_tax" t-value="total_tax + tax['total_tax']"/>
+                                    <t t-esc="'{0:,.2f}'.format(tax['total_tax'])"/>
+                                </td>
+                            </tr>
+                            <tr style="background-color:#efedec;">
+                                <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                    class="text-center">
+                                    Total Sales
+                                </td>
+                                <t t-foreach='branch_total_sales_tax' t-as='total'>
+                                    <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                        class="text-center">
+                                        <t t-esc="'{0:,.2f}'.format(total['total_branch_base_amount'])"/>
+                                    </td>
+                                    <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                        class="text-center">
+                                        <t t-esc="'{0:,.2f}'.format(total['total_branch_tax_amount'])"/>
+                                    </td>
+                                </t>
+                                <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                    class="text-center">
+                                    <t t-esc="'{0:,.2f}'.format(total_sales)"/>
+                                </td>
+                                <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                    class="text-center">
+                                    <t t-esc="'{0:,.2f}'.format(total_tax)"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br/>
+                    <table style="border-collapse: collapse;border: 1px solid #666; margin: 5px;"
+                           border="1" class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th style="border-collapse: collapse;border: 1px solid #666;">Branch</th>
+                                <t t-foreach='branches' t-as='branch'>
+                                    <th style="border-collapse: collapse;border: 1px solid #666;" colspan="2"
+                                        class="text-center">
+                                        <t t-esc="branch['name']"/>
+                                    </th>
+                                </t>
+                                <th style="border-collapse: collapse;border: 1px solid #666;" colspan="2"
+                                    class="text-center">
+                                    Total
+                                </th>
+                            </tr>
+                            <tr style="border-collapse: collapse;border: 1px solid #666;background-color:#efedec;">
+                                <th class="text-center" style="border-collapse: collapse;border: 1px solid #666;">
+                                    Purchase VAT
+                                </th>
+                                <t t-foreach='branches' t-as='branch'>
+                                    <th style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                        class="text-center">
+                                        Amount
+                                    </th>
+                                    <th style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                        class="text-center">
+                                        Tax Amount
+                                    </th>
+                                </t>
+                                <th style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                    class="text-center">
+                                    Net Purchase
+                                </th>
+                                <th style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                    class="text-center">
+                                    Tax Amount
+                                </th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <t t-set="total_purchase" t-value="0"/>
+                            <t t-set="total_tax" t-value="0"/>
+                            <tr t-foreach='purchase_tax' t-as='tax'>
+                                <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                    class="text-center">
+                                    <t t-esc="tax['tax_name']"/>
+                                </td>
+                                <t t-foreach='tax["branch"]' t-as='tax_branch'>
+                                    <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                        class="text-center">
+                                        <t t-esc="'{0:,.2f}'.format(tax_branch['total_base_amount'])"/>
+                                    </td>
+                                    <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                        class="text-center">
+                                        <t t-esc="'{0:,.2f}'.format(tax_branch['total_tax_amount'])"/>
+                                    </td>
+                                </t>
+                                <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                    class="text-center">
+                                    <t t-set="total_purchase" t-value="total_purchase + tax['total_net_purchase']"/>
+                                    <t t-esc="'{0:,.2f}'.format(tax['total_net_purchase'])"/>
+                                </td>
+                                <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                    class="text-center">
+                                    <t t-set="total_tax" t-value="total_tax + tax['total_tax']"/>
+                                    <t t-esc="'{0:,.2f}'.format(tax['total_tax'])"/>
+                                </td>
+                            </tr>
+                            <tr style="background-color:#efedec;">
+                                <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                    class="text-center">
+                                    Total Purchases
+                                </td>
+                                <t t-foreach='branch_total_purchase_tax' t-as='total'>
+                                    <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                        class="text-center">
+                                        <t t-esc="'{0:,.2f}'.format(total['total_branch_base_amount'])"/>
+                                    </td>
+                                    <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                        class="text-center">
+                                        <t t-esc="'{0:,.2f}'.format(total['total_branch_tax_amount'])"/>
+                                    </td>
+                                </t>
+                                <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                    class="text-center">
+                                    <t t-esc="'{0:,.2f}'.format(total_purchase)"/>
+                                </td>
+                                <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                    class="text-center">
+                                    <t t-esc="'{0:,.2f}'.format(total_tax)"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <br/>
+                    <table style="border-collapse: collapse;border: 1px solid #666; margin: 5px;"
+                           border="1" class="table table-sm">
+                        <thead>
+                            <tr style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;">
+                                <th style="border-collapse: collapse;border: 1px solid #666;">Branch</th>
+                                <t t-foreach='branches' t-as='branch'>
+                                    <th style="border-collapse: collapse;border: 1px solid #666;" colspan="2"
+                                        class="text-center">
+                                        <t t-esc="branch['name']"/>
+                                    </th>
+                                </t>
+                                <th style="border-collapse: collapse;border: 1px solid #666;white-space: nowrap;" colspan="8"
+                                    class="text-center" >
+                                    Total Due Amount
+                                </th>
+                            </tr>
+                            <tr style="border-collapse: collapse;border: 1px solid #666;background-color:#efedec;">
+                                <th class="text-center" style="border-collapse: collapse;border: 1px solid #666;">
+                                </th>
+                                <t t-foreach='branches' t-as='branch'>
+                                    <th style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                        class="text-center">
+                                        Amount
+                                    </th>
+                                    <th  style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                        class="text-center">
+                                        Tax Amount
+                                    </th>
+                                </t>
+                                <th style="border-collapse: collapse;border: 1px solid #666;"
+                                    class="text-center">
+                                </th>
+                            </tr>
+
+                        </thead>
+                        <tbody>
+                            <t t-set="total_due_tax" t-value="0"/>
+                            <tr>
+                                <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                    class="text-center">
+                                    Due Amount
+                                </td>
+                                <t t-foreach='branch_total_due' t-as='tax_total'>
+                                    <t t-if="tax_total['due_amount'] > 0">
+                                        <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                            class="text-center">
+                                            <t t-esc="'{0:,.2f}'.format(tax_total['due_amount'])"/>
+                                        </td>
+                                        <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"
+                                            class="text-center">
+                                            <t t-set="total_due_tax" t-value="total_due_tax + tax_total['due_tax']"/>
+                                            <t t-esc="'{0:,.2f}'.format(tax_total['due_tax'])"/>
+                                        </td>
+
+                                    </t>
+                                    <t t-elif="tax_total['due_amount'] == 0">
+                                        <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;white-space: nowrap;"
+                                            class="text-center">
+                                            <t t-esc="'{0:,.2f}'.format(tax_total['due_amount'])"/>
+                                        </td>
+                                        <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;white-space: nowrap;"
+                                            class="text-center">
+                                            <t t-set="total_due_tax" t-value="total_due_tax + tax_total['due_tax']"/>
+                                            <t t-esc="'{0:,.2f}'.format(tax_total['due_tax'])"/>
+                                        </td>
+                                    </t>
+                                    <t t-else="">
+                                        <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;color: #ff000c;white-space: nowrap;"
+                                            class="text-center">
+                                            (<t t-esc="'{0:,.2f}'.format(tax_total['due_amount'])"/>)
+                                        </td>
+                                        <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;color: #ff000c;white-space: nowrap;"
+                                            class="text-center">
+                                            <t t-set="total_due_tax" t-value="total_due_tax + tax_total['due_tax']"/>
+                                            (<t t-esc="'{0:,.2f}'.format(tax_total['due_tax'])"/>)
+                                        </td>
+                                    </t>
+                                </t>
+                                <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;background-color:#efedec;"
+                                    class="text-center">
+                                    <t t-esc="'{0:,.2f}'.format(total_due_tax)"/>
+                                </td>
+                                <!--                                        <td style="border-collapse: collapse;border: 1px solid #666;vertical-align:middle;"-->
+                                <!--                                            class="text-center">-->
+                                <!--                                            <t t-esc="total_tax"/>-->
+                                <!--                                        </td>-->
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

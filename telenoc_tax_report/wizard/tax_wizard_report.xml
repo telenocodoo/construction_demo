@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <record id="view_tax_summary_report_wizard" model="ir.ui.view">
+        <field name="name">tax.summary.report.wizard.form</field>
+        <field name="model">tax.summary.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Tax Reports">
+                <group>
+                    <group string="Dates Filters">
+                        <field name="start_date"/>
+                        <field name="end_date"/>
+                    </group>
+                    <group string="Other Filters">
+                        <field name="is_government"/>
+                        <field name="is_private"/>
+                        <field name="partner_ids" widget='many2many_tags'
+                               options="{'no_create': True, 'no_edit': True}"
+                               attrs="{'invisible': [('is_government', '!=', True)], 'required': [('is_government', '=', True)]}"/>
+                    </group>
+                </group>
+                <footer>
+                    <button name="generate_report" string="Summary Report(PDF)" type="object" class="btn-primary"/>
+                    OR
+                    <button name="export_sales_xls" context="{'xls_export':1}" icon="fa-file"
+                            string="Sales Tax Details(XLS)" type="object" class="btn-warning"/>
+                    OR
+                    <button name="export_purchase_xls" context="{'xls_export':1}"  icon="fa-file"
+                            string="Purchase Tax Details(XLS)" type="object" class="btn-warning"/>
+                    OR
+                    <button string="Cancel" class="btn-danger" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_tax_summary_report" model="ir.actions.act_window">
+        <field name="name">Tax Reports</field>
+        <field name="res_model">tax.summary.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+    <menuitem id="tax_summary_report_menu"
+              name="Tax Report"
+              action="action_tax_summary_report"
+              parent="account.menu_finance_reports"
+              sequence="5"/>
+
+</odoo>
