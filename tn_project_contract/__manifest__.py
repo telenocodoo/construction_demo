@@ -13,10 +13,10 @@ Project Contract
     'version': '1.2',
     'depends': ['account', 'custom_project_manager'],
     'data': [
-        'security/ir.model.access.csv',
-        'data/project_contract_sequence.xml',
-        'views/project_contract_views.xml',
-        'views/res_config_settings_views.xml',    ],
+      #  'security/ir.model.access.csv',
+       # 'data/project_contract_sequence.xml',
+       # 'views/project_contract_views.xml',
+       # 'views/res_config_settings_views.xml',    ],
 
     'installable': True,
     'auto_install': False,
